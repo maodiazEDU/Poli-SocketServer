@@ -12,14 +12,14 @@ import java.sql.*;
 // Esta clase es la que se encarga de crear el servidor y de recibir las conexiones de los clientes
 public class Servidor {
     public static void main(String[] args) { //Metodo principal
-        // Crear el servidor que escucha en el puerto 5000
-        int puerto = 5000;
+        int puerto = 5000; // Puerto en el que el servidor escucha las conexiones
 
         //Crear el socket del servidor
         // El socket del servidor es el que escucha las conexiones de los clientes
         try (ServerSocket serverSocket = new ServerSocket(puerto)) {
             System.out.println("Servidor esperando conexion en el puerto " + puerto); // Mensaje que indica que el servidor esta esperando una conexion
-            while (true) { //
+            
+            while (true) { 
                 Socket socket = serverSocket.accept();
                 System.out.println("Cliente conectado. Direccion IP; " + socket.getInetAddress().getHostAddress() + ":" + socket.getPort());
                 
@@ -29,12 +29,17 @@ public class Servidor {
                 PrintWriter salida = new PrintWriter(socket.getOutputStream(),true);
 
                 // Recibir el mensaje del cliente
-                String telefono = entrada.readLine();
-                String respuesta = buscarPersona(telefono); //LLamar al metodo buscarPersona para buscar la persona en la base de datos
-                System.out.println("Numero recibido; " + telefono); // Mensaje que indica que se ha recibido un numero de telefono
-                System.out.println("Respuesta del servidor: " + respuesta); // Mensaje que indica que se ha recibido una respuesta del servidor
-                salida.println(respuesta); // Enviar la respuesta al cliente)
-                socket.close(); // Cerrar el socket
+                String telefono;
+
+                while((telefono = entrada.readline()) != null) {
+                    String respuesta = buscarPersona(telefono); //LLamar al metodo buscarPersona para buscar la persona en la base de datos
+                    System.out.println("Numero recibido; " + telefono); // Mensaje que indica que se ha recibido un numero de telefono
+                    System.out.println("Respuesta del servidor: " + respuesta); // Mensaje que indica que se ha recibido una respuesta del servidor
+                    salida.println(respuesta); // Enviar la respuesta al cliente)
+                }
+
+                socket.close(); // Cerrar el socket del cliente despues de que termine
+                System.out.println("Error al crear el servidor: " + e.getMessage()); // Mensaje que indica que ha ocurrido un error al crear el servidor;
             }
         } catch (IOException e) { // Capturar la excepcion de entrada y salida
             System.out.println("Error al crear el servidor: " + e.getMessage()); // Mensaje que indica que ha ocurrido un error al crear el servidor
@@ -48,7 +53,6 @@ public static String buscarPersona(String telefono) {
     String consulta = "SELECT p.dir_tel, p.dir_nombre, p.dir_direccion, c.ciud_nombre " +
                         "FROM personas p JOIN ciudades c ON p.dir_ciudad_id = c.ciud_id " +
                         "WHERE p.dir_tel = ?"; // Consulta SQL para buscar la persona por su numero de telefono
-    String resultado = ""; // Variable que almacena el resultado de la consulta
 
     try (Connection conexion = DriverManager.getConnection(url, usuario, contrasena); // Crear la conexion a la base de datos
             PreparedStatement sentencia = conexion.prepareStatement(consulta)) { // Crear la sentencia SQL preparada
