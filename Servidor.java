@@ -61,7 +61,7 @@ public static String buscarPersona(String telefono) {
                 ResultSet resultadoConsulta = sentencia.executeQuery(); // Ejecutar la consulta
 
                 if ( resultadoConsulta.next()) {
-                    return "Telefono> " + resultadoConsulta.getString(1) + "\n" +
+                    return "Telefono: " + resultadoConsulta.getString(1) + "\n" +
                             "Nombre: " + resultadoConsulta.getString(2) + "\n" +
                             "Direccion: " + resultadoConsulta.getString(3) + "\n" +
                             "Ciudad: " + resultadoConsulta.getString(4); // Retornar el resultado de la consulta
