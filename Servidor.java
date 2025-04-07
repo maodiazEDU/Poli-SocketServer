@@ -31,15 +31,15 @@ public class Servidor {
                 // Recibir el mensaje del cliente
                 String telefono;
 
-                while((telefono = entrada.readline()) != null) {
+                while((telefono = entrada.readLine()) != null) {
                     String respuesta = buscarPersona(telefono); //LLamar al metodo buscarPersona para buscar la persona en la base de datos
                     System.out.println("Numero recibido; " + telefono); // Mensaje que indica que se ha recibido un numero de telefono
                     System.out.println("Respuesta del servidor: " + respuesta); // Mensaje que indica que se ha recibido una respuesta del servidor
                     salida.println(respuesta); // Enviar la respuesta al cliente)
                 }
 
-                socket.close(); // Cerrar el socket del cliente despues de que termine
-                System.out.println("Error al crear el servidor: " + e.getMessage()); // Mensaje que indica que ha ocurrido un error al crear el servidor;
+                socket.close(); // Cerrar el socket del cliente despues de que termine la comunicacion
+                System.out.println("Cliente desconectado. Direccion IP: " + socket.getInetAddress().getHostAddress() + ":" + socket.getPort()); // Mensaje que indica que el cliente se ha desconectado
             }
         } catch (IOException e) { // Capturar la excepcion de entrada y salida
             System.out.println("Error al crear el servidor: " + e.getMessage()); // Mensaje que indica que ha ocurrido un error al crear el servidor
